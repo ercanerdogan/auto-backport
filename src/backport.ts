@@ -39,11 +39,16 @@ export class Backport {
 
   async run(): Promise<void> {
     try {
+
+      console.log(`backport.run-1`);
+
       const payload = this.github.getPayload();
       const owner = this.github.getRepo().owner;
       const repo = payload.repository?.name ?? this.github.getRepo().repo;
       const pull_number = this.github.getPullNumber();
       const mainpr = await this.github.getPullRequest(pull_number);
+
+      console.log(`backport.run-2`);
 
       if (!(await this.github.isMerged(mainpr))) {
         const message = "Only merged pull requests can be backported.";
@@ -65,8 +70,8 @@ export class Backport {
 
       console.log(`debug-2`);
 
-      let parsedBranchNames:string="";
-      
+      let parsedBranchNames: string = "";
+
       console.log(`PR body : ${branches}`);
 
       const portingCommandKeywordBegin = `{/port:`;
@@ -76,7 +81,7 @@ export class Backport {
 
       console.log(`porting: ${porting}`);
 
-      if(porting){
+      if (porting) {
         var beginInd = branches?.indexOf(portingCommandKeywordBegin);
         var endInd = branches?.indexOf(portingCommandKeywordEnd);
         parsedBranchNames = branches?.slice(beginInd, endInd) as string;
