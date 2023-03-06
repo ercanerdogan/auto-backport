@@ -101,7 +101,7 @@ export class Backport {
         console.log(
           `Nothing to backport: none of the labels match the backport pattern '${this.config.labels.pattern.source}'`
         );
-        return; // nothing left to do here
+        //return; // nothing left to do here
       }
 
       console.log(
