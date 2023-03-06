@@ -1,7 +1,7 @@
 name: Backport merged pull requests to selected branches
 description: >
   Fast and flexible action to cherry-pick commits from labeled pull requests
-author: korthout
+author: ercanerdogan
 inputs:
   github_token:
     description: >

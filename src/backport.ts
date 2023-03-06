@@ -59,11 +59,11 @@ export class Backport {
       const headref = mainpr.head.sha;
       const baseref = mainpr.base.sha;
       const labels = mainpr.labels;
-
-      let parsedBranchNames:string="";
-
       const branches = mainpr.body;
-      console.log(`PR body : ${branches}`)
+      
+      let parsedBranchNames:string="";
+      
+      console.log(`PR body : ${branches}`);
 
       const portingCommandKeywordBegin = `{/port:`;
       const portingCommandKeywordEnd = `}`;
@@ -176,6 +176,7 @@ export class Backport {
           const branchname = `${targetDirectory}/backport-${pull_number}-to-${target}`;
 
           console.log(`Start backport to ${branchname}`);
+
           try {
             await git.checkout(branchname, `origin/${target}`, this.config.pwd);
           } catch (error) {
