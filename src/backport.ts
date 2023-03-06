@@ -61,14 +61,14 @@ export class Backport {
         return;
       }
 
-      console.log(`debug-1`);
+      console.log(`debug-backport-ts-1`);
 
       const headref = mainpr.head.sha;
       const baseref = mainpr.base.sha;
       const labels = mainpr.labels;
       const branches = mainpr.body;
 
-      console.log(`debug-2`);
+      console.log(`debug-backport-ts-2`);
 
       let parsedBranchNames: string = "";
 
