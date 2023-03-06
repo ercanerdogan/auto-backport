@@ -60,8 +60,32 @@ export class Backport {
       const baseref = mainpr.base.sha;
       const labels = mainpr.labels;
 
+      let parsedBranchNames:string="";
+
+      const branches = mainpr.body;
+      console.log(`PR body : ${branches}`)
+
+      const portingCommandKeywordBegin = `{/port:`;
+      const portingCommandKeywordEnd = `}`;
+
+      var porting = branches?.includes(portingCommandKeywordBegin);
+
+      console.log(`porting: ${porting}`);
+
+      if(porting){
+        var beginInd = branches?.indexOf(portingCommandKeywordBegin);
+        var endInd = branches?.indexOf(portingCommandKeywordEnd);
+        parsedBranchNames = branches?.slice(beginInd, endInd) as string;
+      }
+
+      var branchList = parsedBranchNames.split(",");
+
       console.log(
-        `Detected labels on PR: ${labels.map((label) => label.name)}`
+        `Detected list on PR: ${branchList}`
+      );
+
+      console.log(
+        `Detected labels on PR: ${branchList.map((label) => label)}`
       );
 
       if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
@@ -148,6 +172,7 @@ export class Backport {
 
         try {
           const targetDirectory = `backport`;
+
           const branchname = `${targetDirectory}/backport-${pull_number}-to-${target}`;
 
           console.log(`Start backport to ${branchname}`);
@@ -333,8 +358,7 @@ export class Backport {
                 ancref=$(git merge-base ${baseref} ${headref})
                 git cherry-pick -x $ancref..${headref}
                 \`\`\``
-        : dedent`Note that rebase and squash merges are not supported at this time.
-                For more information see https://github.com/korthout/backport-action/issues/46.`;
+        : dedent`Note that rebase and squash merges are not supported at this time.`;
 
     return dedent`Backport failed for \`${target}\`, ${reason}.
 
