@@ -14,20 +14,12 @@ export interface GithubApi {
   getPayload(): Payload;
   getPullNumber(): number;
   createComment(comment: Comment): Promise<{}>;
-
-  console.log(`debug-github-ts-1`);
-
   getPullRequest(pull_number: number): Promise<PullRequest>;
-
-  console.log(`debug-github-ts-2`);
-  
   isMerged(pull: PullRequest): Promise<boolean>;
   getCommits(pull: PullRequest): Promise<string[]>;
   createPR(pr: CreatePullRequest): Promise<CreatePullRequestResponse>;
   labelPR(pr: number, labels: string[]): Promise<LabelPullRequestResponse>;
   requestReviewers(request: ReviewRequest): Promise<RequestReviewersResponse>;
-  
-  console.log(`debug-github-ts-end`);
 }
 
 export class Github implements GithubApi {
