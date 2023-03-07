@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/korthout/backport-action.git"
+    "url": "git+https://github.com/ercanerdogan/auto-backport.git"
   },
   "keywords": [
     "actions",
