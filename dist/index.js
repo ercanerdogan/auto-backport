@@ -86,7 +86,7 @@ class Backport {
                 console.log(`debug-backport-ts-2`);
                 let parsedBranchNames = "";
                 console.log(`PR body : ${branches}`);
-                const portingCommand = `@port`;
+                const portingCommand = `@wkport`;
                 // const portingCommandKeywordEnd = `}`;
                 var porting = branches === null || branches === void 0 ? void 0 : branches.includes(portingCommand);
                 console.log(`porting: ${porting}`);

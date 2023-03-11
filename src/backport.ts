@@ -74,7 +74,7 @@ export class Backport {
 
       console.log(`PR body : ${branches}`);
 
-      const portingCommand = `@port`;
+      const portingCommand = `@wkport`;
       // const portingCommandKeywordEnd = `}`;
 
       var porting = branches?.includes(portingCommand);
