@@ -70,7 +70,7 @@ export class Backport {
 
       console.log(`debug-backport-ts-2`);
 
-      let parsedBranchNames: string = "";
+      let parsedBranchNames= "";
 
       console.log(`PR body : ${branches}`);
 
@@ -80,8 +80,8 @@ export class Backport {
 
       console.log(`porting: ${beginInd}`);
 
-      if (beginInd>0) {
-        parsedBranchNames = branches?.slice(beginInd+portingCommand.length) as string;
+      if (beginInd>=0) {
+        parsedBranchNames = branches?.slice(beginInd+portingCommand.length+1) as string;
       }
 
       console.log(`Branch names on PR: ${parsedBranchNames}`);

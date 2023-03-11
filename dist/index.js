@@ -89,8 +89,8 @@ class Backport {
                 const portingCommand = `/port`;
                 let beginInd = (_c = branches === null || branches === void 0 ? void 0 : branches.indexOf(portingCommand)) !== null && _c !== void 0 ? _c : 0;
                 console.log(`porting: ${beginInd}`);
-                if (beginInd > 0) {
-                    parsedBranchNames = branches === null || branches === void 0 ? void 0 : branches.slice(beginInd + portingCommand.length);
+                if (beginInd >= 0) {
+                    parsedBranchNames = branches === null || branches === void 0 ? void 0 : branches.slice(beginInd + portingCommand.length + 1);
                 }
                 console.log(`Branch names on PR: ${parsedBranchNames}`);
                 var branchList = parsedBranchNames.split(",");
