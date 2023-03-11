@@ -86,15 +86,14 @@ class Backport {
                 console.log(`debug-backport-ts-2`);
                 let parsedBranchNames = "";
                 console.log(`PR body : ${branches}`);
-                const portingCommand = `@wkport`;
-                // const portingCommandKeywordEnd = `}`;
+                const portingCommand = `/port`;
                 var porting = branches === null || branches === void 0 ? void 0 : branches.includes(portingCommand);
                 console.log(`porting: ${porting}`);
                 if (porting) {
                     let beginInd = (_c = branches === null || branches === void 0 ? void 0 : branches.indexOf(portingCommand)) !== null && _c !== void 0 ? _c : 0;
-                    // var endInd = branches?.indexOf(portingCommandKeywordEnd);
                     parsedBranchNames = branches === null || branches === void 0 ? void 0 : branches.slice(beginInd + portingCommand.length);
                 }
+                console.log(`Branch names on PR: ${parsedBranchNames}`);
                 var branchList = parsedBranchNames.split(",");
                 console.log(`Detected list on PR: ${branchList}`);
                 console.log(`Detected branche names on PR: ${branchList.map((label) => label)}`);

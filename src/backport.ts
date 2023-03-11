@@ -74,8 +74,7 @@ export class Backport {
 
       console.log(`PR body : ${branches}`);
 
-      const portingCommand = `@wkport`;
-      // const portingCommandKeywordEnd = `}`;
+      const portingCommand = `/port`;
 
       var porting = branches?.includes(portingCommand);
 
@@ -83,19 +82,16 @@ export class Backport {
 
       if (porting) {
         let beginInd = branches?.indexOf(portingCommand) ?? 0;
-        // var endInd = branches?.indexOf(portingCommandKeywordEnd);
         parsedBranchNames = branches?.slice(beginInd+portingCommand.length) as string;
       }
 
+      console.log(`Branch names on PR: ${parsedBranchNames}`);
+
       var branchList = parsedBranchNames.split(",");
 
-      console.log(
-        `Detected list on PR: ${branchList}`
-      );
+      console.log(`Detected list on PR: ${branchList}`);
 
-      console.log(
-        `Detected branche names on PR: ${branchList.map((label) => label)}`
-      );
+      console.log(`Detected branche names on PR: ${branchList.map((label) => label)}`);
 
       // if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
       //   console.log(
@@ -104,9 +100,7 @@ export class Backport {
       //   //return; // nothing left to do here
       // }
 
-      console.log(
-        `Fetching all the commits from the pull request: ${mainpr.commits + 1}`
-      );
+      console.log(`Fetching all the commits from the pull request: ${mainpr.commits + 1}`);
 
       await git.fetch(
         `refs/pull/${pull_number}/head`,
