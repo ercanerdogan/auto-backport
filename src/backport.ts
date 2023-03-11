@@ -74,17 +74,17 @@ export class Backport {
 
       console.log(`PR body : ${branches}`);
 
-      const portingCommandKeywordBegin = `{/port:`;
-      const portingCommandKeywordEnd = `}`;
+      const portingCommand = `@port`;
+      // const portingCommandKeywordEnd = `}`;
 
-      var porting = branches?.includes(portingCommandKeywordBegin);
+      var porting = branches?.includes(portingCommand);
 
       console.log(`porting: ${porting}`);
 
       if (porting) {
-        var beginInd = branches?.indexOf(portingCommandKeywordBegin);
-        var endInd = branches?.indexOf(portingCommandKeywordEnd);
-        parsedBranchNames = branches?.slice(beginInd, endInd) as string;
+        let beginInd = branches?.indexOf(portingCommand) ?? 0;
+        // var endInd = branches?.indexOf(portingCommandKeywordEnd);
+        parsedBranchNames = branches?.slice(beginInd+portingCommand.length) as string;
       }
 
       var branchList = parsedBranchNames.split(",");
@@ -94,19 +94,20 @@ export class Backport {
       );
 
       console.log(
-        `Detected labels on PR: ${branchList.map((label) => label)}`
+        `Detected branche names on PR: ${branchList.map((label) => label)}`
       );
 
-      if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
-        console.log(
-          `Nothing to backport: none of the labels match the backport pattern '${this.config.labels.pattern.source}'`
-        );
-        //return; // nothing left to do here
-      }
+      // if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
+      //   console.log(
+      //     `Nothing to backport: none of the labels match the backport pattern '${this.config.labels.pattern.source}'`
+      //   );
+      //   //return; // nothing left to do here
+      // }
 
       console.log(
         `Fetching all the commits from the pull request: ${mainpr.commits + 1}`
       );
+
       await git.fetch(
         `refs/pull/${pull_number}/head`,
         this.config.pwd,
@@ -136,28 +137,31 @@ export class Backport {
       );
 
       const successByTarget = new Map<string, boolean>();
-      for (const label of labels) {
-        console.log(`Working on label ${label.name}`);
+      for (const branch of branchList) {
+
+        console.log(`Working on label ${branch}`);
 
         // we are looking for labels like "backport stable/0.24"
-        const match = this.config.labels.pattern.exec(label.name);
+        // const match = this.config.labels.pattern.exec(label.name);
 
-        if (!match) {
-          console.log("Doesn't match expected prefix");
-          continue;
-        }
-        if (match.length < 2) {
-          console.error(
-            dedent`\`label_pattern\` '${this.config.labels.pattern.source}' \
-            matched "${label.name}", but did not capture any branchname. \
-            Please make sure to provide a regex with a capture group as \
-            \`label_pattern\`.`
-          );
-          continue;
-        }
+        // if (!match) {
+        //   console.log("Doesn't match expected prefix");
+        //   continue;
+        // }
+        // if (match.length < 2) {
+        //   console.error(
+        //     dedent`\`label_pattern\` '${this.config.labels.pattern.source}' \
+        //     matched "${label.name}", but did not capture any branchname. \
+        //     Please make sure to provide a regex with a capture group as \
+        //     \`label_pattern\`.`
+        //   );
+        //   continue;
+        // }
 
         //extract the target branch (e.g. "stable/0.24")
-        const target = match[1];
+        // const target = match[1];
+        const target= branch;
+
         console.log(`Found target in label: ${target}`);
 
         try {
@@ -180,11 +184,11 @@ export class Backport {
         }
 
         try {
-          const targetDirectory = `backport`;
+          const targetDirectory = `port`;
 
-          const branchname = `${targetDirectory}/backport-${pull_number}-to-${target}`;
+          const branchname = `${targetDirectory}/port-${pull_number}-to-${target}`;
 
-          console.log(`Start backport to ${branchname}`);
+          console.log(`Start port to ${branchname}`);
 
           try {
             await git.checkout(branchname, `origin/${target}`, this.config.pwd);
@@ -418,10 +422,10 @@ export class Backport {
  * @param labels an array of labels
  * @returns a 'curried' function to easily test for a matching a label
  */
-function someLabelIn(labels: { name: string }[]): {
-  matches: (pattern: RegExp) => boolean;
-} {
-  return {
-    matches: (pattern) => labels.some((l) => pattern.test(l.name)),
-  };
-}
+// function someLabelIn(labels: { name: string }[]): {
+//   matches: (pattern: RegExp) => boolean;
+// } {
+//   return {
+//     matches: (pattern) => labels.some((l) => pattern.test(l.name)),
+//   };
+// }
