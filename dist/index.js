@@ -87,16 +87,15 @@ class Backport {
                 let parsedBranchNames = "";
                 console.log(`PR body : ${branches}`);
                 const portingCommand = `/port`;
-                var porting = branches === null || branches === void 0 ? void 0 : branches.includes(portingCommand);
-                console.log(`porting: ${porting}`);
-                if (porting) {
-                    let beginInd = (_c = branches === null || branches === void 0 ? void 0 : branches.indexOf(portingCommand)) !== null && _c !== void 0 ? _c : 0;
+                let beginInd = (_c = branches === null || branches === void 0 ? void 0 : branches.indexOf(portingCommand)) !== null && _c !== void 0 ? _c : 0;
+                console.log(`porting: ${beginInd}`);
+                if (beginInd > 0) {
                     parsedBranchNames = branches === null || branches === void 0 ? void 0 : branches.slice(beginInd + portingCommand.length);
                 }
                 console.log(`Branch names on PR: ${parsedBranchNames}`);
                 var branchList = parsedBranchNames.split(",");
                 console.log(`Detected list on PR: ${branchList}`);
-                console.log(`Detected branche names on PR: ${branchList.map((label) => label)}`);
+                console.log(`Detected branch names on PR: ${branchList.map((label) => label)}`);
                 // if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
                 //   console.log(
                 //     `Nothing to backport: none of the labels match the backport pattern '${this.config.labels.pattern.source}'`

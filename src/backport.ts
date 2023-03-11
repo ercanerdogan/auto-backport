@@ -76,12 +76,11 @@ export class Backport {
 
       const portingCommand = `/port`;
 
-      var porting = branches?.includes(portingCommand);
+      let beginInd = branches?.indexOf(portingCommand) ?? 0;
 
-      console.log(`porting: ${porting}`);
+      console.log(`porting: ${beginInd}`);
 
-      if (porting) {
-        let beginInd = branches?.indexOf(portingCommand) ?? 0;
+      if (beginInd>0) {
         parsedBranchNames = branches?.slice(beginInd+portingCommand.length) as string;
       }
 
@@ -91,7 +90,7 @@ export class Backport {
 
       console.log(`Detected list on PR: ${branchList}`);
 
-      console.log(`Detected branche names on PR: ${branchList.map((label) => label)}`);
+      console.log(`Detected branch names on PR: ${branchList.map((label) => label)}`);
 
       // if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
       //   console.log(
