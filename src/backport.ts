@@ -19,6 +19,7 @@ type Config = {
   pull: {
     description: string;
     title: string;
+    comment_body: string;
   };
   copy_labels_pattern?: RegExp;
 };
@@ -66,7 +67,7 @@ export class Backport {
       const headref = mainpr.head.sha;
       const baseref = mainpr.base.sha;
       const labels = mainpr.labels;
-      const branches = mainpr.body;
+      const branches = this.config.pull.comment_body;
 
       console.log(`debug-backport-ts-2`);
 

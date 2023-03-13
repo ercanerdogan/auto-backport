@@ -82,7 +82,7 @@ class Backport {
                 const headref = mainpr.head.sha;
                 const baseref = mainpr.base.sha;
                 const labels = mainpr.labels;
-                const branches = mainpr.body;
+                const branches = this.config.pull.comment_body;
                 console.log(`debug-backport-ts-2`);
                 let parsedBranchNames = "";
                 console.log(`PR body : ${branches}`);
@@ -652,13 +652,14 @@ function run() {
         const pattern = new RegExp(core.getInput("label_pattern"));
         const description = core.getInput("pull_description");
         const title = core.getInput("pull_title");
+        const comment_body = core.getInput("comment_body");
         const copy_labels_pattern = core.getInput("copy_labels_pattern");
         const github = new github_1.Github(token);
         console.log(`label pattern : ${pattern}`);
         const backport = new backport_1.Backport(github, {
             pwd,
             labels: { pattern },
-            pull: { description, title },
+            pull: { description, title, comment_body },
             copy_labels_pattern: copy_labels_pattern === "" ? undefined : new RegExp(copy_labels_pattern),
         });
         return backport.run();
