@@ -1,0 +1,8 @@
+# production
+/lib
+
+# dependencies
+/node_modules
+
+# private npm repos
+.npmrc

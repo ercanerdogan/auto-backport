@@ -1,0 +1,57 @@
+name: Backport merged pull requests to selected branches
+description: >
+  Fast and flexible action to cherry-pick commits from labeled pull requests
+author: ercanerdogan
+inputs:
+  github_token:
+    description: >
+      Token to authenticate requests to GitHub.
+      Used to create and label pull requests and to comment.
+      Either GITHUB_TOKEN or a repo-scoped Personal Access Token (PAT).
+    default: ${{ github.token }}
+  github_workspace:
+    description: Working directory for the backport action.
+    default: ${{ github.workspace }}
+  label_pattern:
+    description: >
+      Regex pattern to match the backport labels on the merged pull request.
+      Must contain a capture group for the target branch.
+      The action will backport the pull request to each matched target branch.
+    default: ^backport ([^ ]+)$
+  pull_description:
+    description: >
+      Template used as description (i.e. body) in the pull requests created by this action.
+      Placeholders can be used to define variable values.
+      These are indicated by a dollar sign and curly braces (`${placeholder}`).
+      Please refer to this action's README for all available placeholders.
+    default: |-
+      # Description
+      Backport of #${pull_number} to `${target_branch}`.
+  pull_title:
+    description: >
+      Template used as the title in the pull requests created by this action.
+      Placeholders can be used to define variable values.
+      These are indicated by a dollar sign and curly braces (`${placeholder}`).
+      Please refer to this action's README for all available placeholders.
+    default: >-
+      [Backport ${target_branch}] ${pull_title}
+  copy_labels_pattern:
+    description: >
+      Regex pattern to match github labels which will be copied from the original pull request to the backport pull request.
+      Note that labels matching `label_pattern` are excluded.
+      By default, no labels are copied.
+outputs:
+  was_successful:
+    description: >
+      Whether or not the changes could be backported successfully to all targets.
+      Either 'true' or 'false'.
+  was_successful_by_target:
+    description: >
+      Whether or not the changes could be backported successfully to all targets - broken down by target.
+      Follows the pattern '{{label}}=true|false'.
+runs:
+  using: "node16"
+  main: "dist/index.js"
+branding:
+  icon: 'copy'
+  color: 'yellow'
