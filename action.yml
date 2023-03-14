@@ -25,7 +25,6 @@ inputs:
       These are indicated by a dollar sign and curly braces (`${placeholder}`).
       Please refer to this action's README for all available placeholders.
     default: |-
-      # Description
       ${main_body}
       ---------
       Backport of #${pull_number} to `${target_branch}`.
