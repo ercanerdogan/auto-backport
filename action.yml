@@ -26,8 +26,6 @@ inputs:
       Please refer to this action's README for all available placeholders.
     default: |-
       # Description
-      Origininal PR Description
-      ---------
       ${main_body}
       ---------
       Backport of #${pull_number} to `${target_branch}`.
