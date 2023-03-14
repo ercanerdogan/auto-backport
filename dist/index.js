@@ -61,13 +61,11 @@ class Backport {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(`backport.run-1`);
                 const payload = this.github.getPayload();
                 const owner = this.github.getRepo().owner;
                 const repo = (_b = (_a = payload.repository) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : this.github.getRepo().repo;
                 const pull_number = this.github.getPullNumber();
                 const mainpr = yield this.github.getPullRequest(pull_number);
-                console.log(`backport.run-2`);
                 if (!(yield this.github.isMerged(mainpr))) {
                     const message = "Only merged pull requests can be backported.";
                     this.github.createComment({
@@ -78,30 +76,20 @@ class Backport {
                     });
                     return;
                 }
-                console.log(`debug-backport-ts-1`);
                 const headref = mainpr.head.sha;
                 const baseref = mainpr.base.sha;
                 const labels = mainpr.labels;
-                const branches = this.config.pull.comment_body;
-                console.log(`debug-backport-ts-2`);
+                const prCommentBody = this.config.pull.comment_body;
                 let parsedBranchNames = "";
-                console.log(`PR body : ${branches}`);
+                console.log(`PR body : ${prCommentBody}`);
                 const portingCommand = `/port`;
-                let beginInd = (_c = branches === null || branches === void 0 ? void 0 : branches.indexOf(portingCommand)) !== null && _c !== void 0 ? _c : 0;
-                console.log(`porting: ${beginInd}`);
+                let beginInd = (_c = prCommentBody === null || prCommentBody === void 0 ? void 0 : prCommentBody.indexOf(portingCommand)) !== null && _c !== void 0 ? _c : 0;
                 if (beginInd >= 0) {
-                    parsedBranchNames = branches === null || branches === void 0 ? void 0 : branches.slice(beginInd + portingCommand.length + 1);
+                    parsedBranchNames = prCommentBody === null || prCommentBody === void 0 ? void 0 : prCommentBody.slice(beginInd + portingCommand.length + 1);
                 }
-                console.log(`Branch names on PR: ${parsedBranchNames}`);
+                console.log(`Branch names on PR comment: ${parsedBranchNames}`);
                 var branchList = parsedBranchNames.split(",");
                 console.log(`Detected list on PR: ${branchList}`);
-                console.log(`Detected branch names on PR: ${branchList.map((label) => label)}`);
-                // if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
-                //   console.log(
-                //     `Nothing to backport: none of the labels match the backport pattern '${this.config.labels.pattern.source}'`
-                //   );
-                //   //return; // nothing left to do here
-                // }
                 console.log(`Fetching all the commits from the pull request: ${mainpr.commits + 1}`);
                 yield git.fetch(`refs/pull/${pull_number}/head`, this.config.pwd, mainpr.commits + 1 // +1 in case this concerns a shallowly cloned repo
                 );
@@ -120,23 +108,6 @@ class Backport {
                 const successByTarget = new Map();
                 for (const branch of branchList) {
                     console.log(`Working on label ${branch}`);
-                    // we are looking for labels like "backport stable/0.24"
-                    // const match = this.config.labels.pattern.exec(label.name);
-                    // if (!match) {
-                    //   console.log("Doesn't match expected prefix");
-                    //   continue;
-                    // }
-                    // if (match.length < 2) {
-                    //   console.error(
-                    //     dedent`\`label_pattern\` '${this.config.labels.pattern.source}' \
-                    //     matched "${label.name}", but did not capture any branchname. \
-                    //     Please make sure to provide a regex with a capture group as \
-                    //     \`label_pattern\`.`
-                    //   );
-                    //   continue;
-                    // }
-                    //extract the target branch (e.g. "stable/0.24")
-                    // const target = match[1];
                     const target = branch;
                     console.log(`Found target in label: ${target}`);
                     try {
@@ -334,19 +305,6 @@ class Backport {
     }
 }
 exports.Backport = Backport;
-/**
- * Helper method for label arrays to check that it matches a particular pattern
- *
- * @param labels an array of labels
- * @returns a 'curried' function to easily test for a matching a label
- */
-// function someLabelIn(labels: { name: string }[]): {
-//   matches: (pattern: RegExp) => boolean;
-// } {
-//   return {
-//     matches: (pattern) => labels.some((l) => pattern.test(l.name)),
-//   };
-// }
 
 
 /***/ }),
@@ -655,7 +613,6 @@ function run() {
         const comment_body = core.getInput("comment_body");
         const copy_labels_pattern = core.getInput("copy_labels_pattern");
         const github = new github_1.Github(token);
-        console.log(`label pattern : ${pattern}`);
         const backport = new backport_1.Backport(github, {
             pwd,
             labels: { pattern },
