@@ -40,6 +40,9 @@ inputs:
       Regex pattern to match github labels which will be copied from the original pull request to the backport pull request.
       Note that labels matching `label_pattern` are excluded.
       By default, no labels are copied.
+  comment_body:
+    description: >
+      Getting comment body from pull-request.
 outputs:
   was_successful:
     description: >

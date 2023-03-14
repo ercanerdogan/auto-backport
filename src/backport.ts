@@ -19,6 +19,7 @@ type Config = {
   pull: {
     description: string;
     title: string;
+    comment_body: string;
   };
   copy_labels_pattern?: RegExp;
 };
@@ -39,16 +40,11 @@ export class Backport {
 
   async run(): Promise<void> {
     try {
-
-      console.log(`backport.run-1`);
-
       const payload = this.github.getPayload();
       const owner = this.github.getRepo().owner;
       const repo = payload.repository?.name ?? this.github.getRepo().repo;
       const pull_number = this.github.getPullNumber();
       const mainpr = await this.github.getPullRequest(pull_number);
-
-      console.log(`backport.run-2`);
 
       if (!(await this.github.isMerged(mainpr))) {
         const message = "Only merged pull requests can be backported.";
@@ -61,43 +57,28 @@ export class Backport {
         return;
       }
 
-      console.log(`debug-backport-ts-1`);
-
       const headref = mainpr.head.sha;
       const baseref = mainpr.base.sha;
       const labels = mainpr.labels;
-      const branches = mainpr.body;
-
-      console.log(`debug-backport-ts-2`);
+      const prCommentBody = this.config.pull.comment_body;
 
       let parsedBranchNames= "";
 
-      console.log(`PR body : ${branches}`);
+      console.log(`PR body : ${prCommentBody}`);
 
       const portingCommand = `/port`;
 
-      let beginInd = branches?.indexOf(portingCommand) ?? 0;
-
-      console.log(`porting: ${beginInd}`);
+      let beginInd = prCommentBody?.indexOf(portingCommand) ?? 0;
 
       if (beginInd>=0) {
-        parsedBranchNames = branches?.slice(beginInd+portingCommand.length+1) as string;
+        parsedBranchNames = prCommentBody?.slice(beginInd+portingCommand.length+1) as string;
       }
 
-      console.log(`Branch names on PR: ${parsedBranchNames}`);
+      console.log(`Branch names on PR comment: ${parsedBranchNames}`);
 
       var branchList = parsedBranchNames.split(",");
 
       console.log(`Detected list on PR: ${branchList}`);
-
-      console.log(`Detected branch names on PR: ${branchList.map((label) => label)}`);
-
-      // if (!someLabelIn(labels).matches(this.config.labels.pattern)) {
-      //   console.log(
-      //     `Nothing to backport: none of the labels match the backport pattern '${this.config.labels.pattern.source}'`
-      //   );
-      //   //return; // nothing left to do here
-      // }
 
       console.log(`Fetching all the commits from the pull request: ${mainpr.commits + 1}`);
 
@@ -134,25 +115,6 @@ export class Backport {
 
         console.log(`Working on label ${branch}`);
 
-        // we are looking for labels like "backport stable/0.24"
-        // const match = this.config.labels.pattern.exec(label.name);
-
-        // if (!match) {
-        //   console.log("Doesn't match expected prefix");
-        //   continue;
-        // }
-        // if (match.length < 2) {
-        //   console.error(
-        //     dedent`\`label_pattern\` '${this.config.labels.pattern.source}' \
-        //     matched "${label.name}", but did not capture any branchname. \
-        //     Please make sure to provide a regex with a capture group as \
-        //     \`label_pattern\`.`
-        //   );
-        //   continue;
-        // }
-
-        //extract the target branch (e.g. "stable/0.24")
-        // const target = match[1];
         const target= branch;
 
         console.log(`Found target in label: ${target}`);
@@ -408,17 +370,3 @@ export class Backport {
     core.setOutput(Output.wasSuccessfulByTarget, byTargetOutput);
   }
 }
-
-/**
- * Helper method for label arrays to check that it matches a particular pattern
- *
- * @param labels an array of labels
- * @returns a 'curried' function to easily test for a matching a label
- */
-// function someLabelIn(labels: { name: string }[]): {
-//   matches: (pattern: RegExp) => boolean;
-// } {
-//   return {
-//     matches: (pattern) => labels.some((l) => pattern.test(l.name)),
-//   };
-// }
