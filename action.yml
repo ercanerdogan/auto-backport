@@ -24,7 +24,7 @@ inputs:
       Placeholders can be used to define variable values.
       These are indicated by a dollar sign and curly braces (`${placeholder}`).
       Please refer to this action's README for all available placeholders.
-    default: |-
+    default: >
       ${main_body}
       ---------
       Backport of #${pull_number} to `${target_branch}`.
