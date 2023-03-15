@@ -17,7 +17,7 @@ async function run(): Promise<void> {
   const copy_labels_pattern = core.getInput("copy_labels_pattern");
 
   const github = new Github(token);
-  
+
   const backport = new Backport(github, {
     pwd,
     labels: { pattern },

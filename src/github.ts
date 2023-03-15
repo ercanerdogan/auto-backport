@@ -131,7 +131,7 @@ export class Github implements GithubApi {
 export type PullRequest = {
   number: number;
   title: string;
-  body: string | null;
+  body: string;
   head: {
     sha: string;
   };

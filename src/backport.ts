@@ -62,7 +62,7 @@ export class Backport {
       const labels = mainpr.labels;
       const prCommentBody = this.config.pull.comment_body;
 
-      let parsedBranchNames= "";
+      let parsedBranchNames = "";
 
       console.log(`PR body : ${prCommentBody}`);
 
@@ -70,8 +70,10 @@ export class Backport {
 
       let beginInd = prCommentBody?.indexOf(portingCommand) ?? 0;
 
-      if (beginInd>=0) {
-        parsedBranchNames = prCommentBody?.slice(beginInd+portingCommand.length+1) as string;
+      if (beginInd >= 0) {
+        parsedBranchNames = prCommentBody?.slice(
+          beginInd + portingCommand.length + 1
+        ) as string;
       }
 
       console.log(`Branch names on PR comment: ${parsedBranchNames}`);
@@ -80,7 +82,9 @@ export class Backport {
 
       console.log(`Detected list on PR: ${branchList}`);
 
-      console.log(`Fetching all the commits from the pull request: ${mainpr.commits + 1}`);
+      console.log(
+        `Fetching all the commits from the pull request: ${mainpr.commits + 1}`
+      );
 
       await git.fetch(
         `refs/pull/${pull_number}/head`,
@@ -112,10 +116,9 @@ export class Backport {
 
       const successByTarget = new Map<string, boolean>();
       for (const branch of branchList) {
-
         console.log(`Working on label ${branch}`);
 
-        const target= branch;
+        const target = branch;
 
         console.log(`Found target in label: ${target}`);
 
